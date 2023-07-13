@@ -16,7 +16,7 @@ export function Sidebar(props: SidebarProps) {
       />
       <div className={styles.profile}>
 
-        <Avatar img="https://github.com/TashaGodSpell.png"/>
+        <Avatar src="https://github.com/TashaGodSpell.png"/>
         <strong>{props.name}</strong>
         <span>{props.job}</span>
       </div>

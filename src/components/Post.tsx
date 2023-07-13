@@ -12,27 +12,32 @@ interface Author {
 }
 
 interface Content {
-  type: string;
+  type: 'paragraph' | 'link';
   content: string;
 }
 
-interface PostProps {
+export interface PostType {
   author: Author;
   publishedAt: Date;
   content: Content[];
+  id?: number
 }
 
-export function Post({ author, publishedAt, content }: PostProps) {
+interface PostProps {
+ post: PostType
+}
+
+export function Post({ post }: PostProps) {
   const [comments, setComments] = useState(["Post bacana"]);
   const [newCommentText, setNewCommentText] = useState("");
 
   const publishedDateFormatted = format(
-    publishedAt,
+    post.publishedAt,
     "d 'de' LLLL 'às' HH:mm'h'",
     { locale: ptBR }
   );
 
-  const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+  const publishedDateRelativeToNow = formatDistanceToNow(post.publishedAt, {
     locale: ptBR,
     addSuffix: true,
   });
@@ -62,15 +67,15 @@ export function Post({ author, publishedAt, content }: PostProps) {
     <article className={styles.post}>
       <header>
         <div className={styles.author}>
-          <Avatar img={author.avatarUrl} />
+          <Avatar src={post.author.avatarUrl} />
           <div className={styles.authorInfo}>
-            <strong>{author.name}</strong>
-            <span>{author.role}</span>
+            <strong>{post.author.name}</strong>
+            <span>{post.author.role}</span>
           </div>
 
           <time
             title={publishedDateFormatted}
-            dateTime={publishedAt.toISOString()}
+            dateTime={post.publishedAt.toISOString()}
           >
             {publishedDateRelativeToNow}
           </time>
@@ -78,7 +83,7 @@ export function Post({ author, publishedAt, content }: PostProps) {
       </header>
 
       <div className={styles.content}>
-        {content.map((line, index) => {
+        {post.content.map((line, index) => {
           switch (line.type) {
             case "paragraph":
               return <p key={line.content}>{line.content}</p>;
@@ -118,8 +123,8 @@ export function Post({ author, publishedAt, content }: PostProps) {
           return (
             <Comment
               key={comment}
-              name={author.name}
-              img={author.avatarUrl}
+              name={post.author.name}
+              img={post.author.avatarUrl}
               comment={comment}
               onDeleteComment={deleteComment}
             />
